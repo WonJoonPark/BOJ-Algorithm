@@ -32,10 +32,6 @@ bool cmpz(planet a, planet b) {
 	else return false;
 }
 
-int abs(int n1, int n2) {
-	if ((n1 - n2) < 0) return -(n1 - n2);
-	else return (n1 - n2);
-}
 int minthree(int n1, int n2, int n3) {
 	return min(min(n1, n2),n3);
 }
@@ -59,31 +55,34 @@ void makeedges() { //간선 삽입
 	edges tmpe;
 	sort(parr.begin(), parr.end(), cmpx); //x 기준으로 오름차순 정렬
 	for (int i = 0; i < N-1; i++) {
-		tmpe.cost = minthree(abs(parr[i].x, parr[i + 1].x), abs(parr[i].y, parr[i + 1].y), abs(parr[i].z, parr[i + 1].z));
+		tmpe.cost = abs(parr[i].x-parr[i + 1].x);
 		tmpe.index1 = parr[i].idx; tmpe.index2 = parr[i + 1].idx;
 		earr.push_back(tmpe);
 	}
 	sort(parr.begin(), parr.end(), cmpy); //y 기준으로 오름차순 정렬
 	for (int i = 0; i < N - 1; i++) {
-		tmpe.cost = minthree(abs(parr[i].x, parr[i + 1].x), abs(parr[i].y, parr[i + 1].y), abs(parr[i].z, parr[i + 1].z));
+		tmpe.cost = abs(parr[i].y-parr[i + 1].y);
 		tmpe.index1 = parr[i].idx; tmpe.index2 = parr[i + 1].idx;
 		earr.push_back(tmpe);
 	}
 	sort(parr.begin(), parr.end(), cmpz); //z 기준으로 오름차순 정렬
 	for (int i = 0; i < N - 1; i++) {
-		tmpe.cost = minthree(abs(parr[i].x,parr[i+1].x), abs(parr[i].y, parr[i + 1].y),abs(parr[i].z, parr[i + 1].z));
+		tmpe.cost = abs(parr[i].z-parr[i + 1].z);
 		tmpe.index1 = parr[i].idx; tmpe.index2 = parr[i + 1].idx;
 		earr.push_back(tmpe);
 	}
 	sort(earr.begin(), earr.end(), cmp); //cost기준으로 오름차순 정렬
 }
 void makeMST() {
+	int exitcount = 0;
 	for (int i = 0; i < earr.size(); i++) {
+		if (exitcount == N - 1) break;
 		int firstplanet = find(earr[i].index1);
 		int secondplanet = find(earr[i].index2);
 		if (firstplanet == secondplanet) continue;
 		rootindex[secondplanet] = firstplanet;
 		resultsum += earr[i].cost;
+		exitcount++;
 	}
 }
 
